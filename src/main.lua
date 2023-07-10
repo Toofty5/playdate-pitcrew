@@ -9,11 +9,16 @@ import "nut.lua"
 
 local gfx <const> = playdate.graphics
 
-local wheel = Wheel(2)
+local wheel = Wheel(6, "mounted")
 local wheelgun = Wheelgun()
 wheelgun:attach(wheel)
 
 function playdate.update()
     playdate.timer.updateTimers()
     gfx.sprite.update()
+
+    if wheel.state == "gone" then
+      wheel = Wheel(6, "fresh")
+    end
+
 end

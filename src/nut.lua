@@ -3,12 +3,17 @@ local nut_img <const>  = gfx.image.new("img/nut.png")
 local no_nut_img <const>  = gfx.image.new("img/no_nut.png")
 class("Nut").extends(gfx.sprite)
 
-function Nut:init(wheel, pos)
+function Nut:init(wheel, pos, is_present)
     self.wheel = wheel
     self.pos = pos
     self:setZIndex(3)
-    self:setImage(gfx.image.new("img/nut.png"))
-    self.is_present = true
+    self.is_present = is_present
+    if is_present then
+      self:setImage(nut_img)
+    else
+      self:setImage(no_nut_img)
+    end
+
     self:add()
 
 end
