@@ -25,6 +25,7 @@ function Wheel:init(num_nuts, state)
   self:setZIndex(0)
 
   if self.state == "mounted" then
+    self.car = Car(self)
     self.nuts_mounted = num_nuts
     for i = 1, num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
     self:roll_in()
@@ -55,8 +56,8 @@ end
 
 function Wheel:roll_in()
     self:add()
-    local duration = 800
-    local ls1 = playdate.geometry.lineSegment.new(480,140, 200,140)
+    local duration = 1000
+    local ls1 = playdate.geometry.lineSegment.new(1500,140, 200,140)
     local easing = playdate.easingFunctions.outQuint
     self.a = gfx.animator.new(duration, ls1, easing)
 end

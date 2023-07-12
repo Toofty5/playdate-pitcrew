@@ -32,7 +32,7 @@ function Wheelgun:update()
         local dy = SWAY * .75 * math.sin(math.rad(self.rotation))
         self:moveTo(POS_X+dx , POS_Y+dy)
 
-        if playdate.buttonJustPressed("a") then
+        if playdate.buttonJustPressed(playdate.kButtonUp) then
             nut = self:try(self.rotation, self.wheel.nuts)
         end
     elseif self.state == "success" then
