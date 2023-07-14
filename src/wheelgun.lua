@@ -13,6 +13,7 @@ class("Wheelgun").extends(gfx.sprite)
 
 
 function Wheelgun:init()
+    
     local width, height = self:getSize()
     self.state = "ready"
     self:setZIndex(200)
@@ -20,6 +21,7 @@ function Wheelgun:init()
     local w,h = self:getImage():getSize()
     self.rotation = 0
     self.reticle = Reticle(self)
+    self.mode = "loosen"
     self:setCenter(0.5, 0.15)
     self:add()
 end
@@ -38,7 +40,12 @@ function Wheelgun:update()
     elseif self.state == "success" then
         print("success")
         self:moveTo(nut.x, nut.y)
-        self.wheel:remove_nut(nut.pos)
+        if self.mode == "loosen" then
+          self.wheel:remove_nut(nut.pos)
+        elseif self.mode == "tighten" then
+          self.wheel:add_nut(nut.pos)
+        end
+
         self.state = "pause"
         playdate.timer.performAfterDelay(SUCCESS_TIME, self.reset, self)
 
@@ -53,6 +60,7 @@ end
 
 
 function Wheelgun:try(rotation, nuts)
+  if self.mode == "loosen" then
     self:setImage(img_far)
     for i = 1, #nuts do
         local nut = nuts[i]
@@ -65,6 +73,22 @@ function Wheelgun:try(rotation, nuts)
     self.state = "fail"
     playdate.timer.performAfterDelay(FAIL_TIME, self.reset, self)
     return false
+
+  elseif self.mode == "tighten" then
+    self:setImage(img_far)
+    for i = 1, #nuts do
+        local nut = nuts[i]
+        local target = nut:getRotation()
+        if not nut.is_present and (target - TOLERANCE) < rotation and rotation < (target + TOLERANCE) then
+            self.state = "success"
+            return nut
+        end
+    end
+    self.state = "fail"
+    playdate.timer.performAfterDelay(FAIL_TIME, self.reset, self)
+    return false
+
+  end
 end
 
 function Wheelgun:attach(wheel)

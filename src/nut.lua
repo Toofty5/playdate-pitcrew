@@ -36,6 +36,11 @@ function Nut:pop_off()
     LooseNut(self.x,self.y)
 end
 
+function Nut:put_on()
+    self.is_present = true
+    self:setImage(nut_img)
+end
+
 class("LooseNut").extends(gfx.sprite)
 LooseNut.gravity = 10 
 
