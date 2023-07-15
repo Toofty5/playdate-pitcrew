@@ -13,8 +13,9 @@ gfx.popContext()
 
 class('Wheel').extends(gfx.sprite)
 
-function Wheel:init(num_nuts, state)
-  self.num_nuts = num_nuts
+function Wheel:init(car, state)
+  self.car = car
+  self.num_nuts = car.num_nuts
   self.state = state
   self:setImage(wheel_img)
   self.nut_offset = 25
@@ -26,16 +27,13 @@ function Wheel:init(num_nuts, state)
   self:setZIndex(0)
 
   if self.state == "mounted" then
-    self.car = Car(self)
     self.nuts_mounted = num_nuts
-    for i = 1, num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
-
+    for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
   elseif self.state == "fresh" then
     self.nuts_mounted = 0
-    for i = 1, num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
-    self:slide_in()
+    for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
   elseif self.state == "rear" then
-    for i = 1, num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
+    for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
   end
 
   self:add()
@@ -48,7 +46,7 @@ function Wheel:update()
     self.rotation = self.init_rotation + (self.x * 6/math.pi)
     if self.state == "rear" then
     else
-      self:moveTo(self.a:currentValue())
+      self:moveTo(self.car.a:currentValue())
     end
 
     if self.state == "loose" and 
