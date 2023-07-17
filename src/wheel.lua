@@ -45,7 +45,7 @@ function Wheel:update()
   if self.state == "rear" then
     self:moveTo(self.car.a:currentValue():offsetBy(1000,0))
   else
-    self:moveTo(self.a:currentValue())
+    self:moveTo(self.car.a:currentValue())
   end
 
   if self.state == "loose" and playdate.buttonJustPressed(playdate.kButtonDown) then
@@ -61,13 +61,6 @@ end
 
 
 
-function Wheel:roll_in()
-    local duration = 1000
-    local ls1 = playdate.geometry.lineSegment.new(1500,140, 200,140)
-    local easing = playdate.easingFunctions.outQuint
-    self.a = gfx.animator.new(duration, ls1, easing)
-end
-
 function Wheel:slide_in()
     local duration = 400
     local ls1 = playdate.geometry.lineSegment.new(480,300, 200,140)
@@ -75,13 +68,6 @@ function Wheel:slide_in()
     self.a = gfx.animator.new(duration, ls1, easing)
 end
 
-function Wheel:roll_out()
-  self.state = "rollout"
-    local duration = 1200
-    local ls1 = playdate.geometry.lineSegment.new(200,140, -2000,140)
-    local easing = playdate.easingFunctions.inQuint
-    self.a = gfx.animator.new(duration, ls1, easing)
-end
 
 function Wheel:unmount()
     local duration = 300
@@ -100,7 +86,6 @@ end
 
 function Wheel:add_nut(index)
   self.nuts[index]:put_on()
-
   if self:nuts_mounted() == self.num_nuts then 
     self.state = "ready"
   end

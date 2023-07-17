@@ -21,5 +21,11 @@ function playdate.update()
     wheel = Wheel(car, "fresh")
     car.wheel = wheel
     wheelgun:attach(wheel)
+    wheelgun.mode = "tighten"
+  end
+
+  if wheel.state == "ready" then
+    print("wheel is ready")
+    car:roll_out()
   end
 end
