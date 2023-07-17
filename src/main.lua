@@ -11,9 +11,15 @@ local gfx <const> = playdate.graphics
 
 local wheelgun = Wheelgun()
 local car = Car(6, "f1")
-wheelgun:attach(car.wheel)
+local wheel = car.wheel
+wheelgun:attach(wheel)
 
 function playdate.update()
-    playdate.timer.updateTimers()
-    gfx.sprite.update()
+  playdate.timer.updateTimers()
+  gfx.sprite.update()
+  if wheel.state == "gone" then 
+    wheel = Wheel(car, "fresh")
+    car.wheel = wheel
+    wheelgun:attach(wheel)
+  end
 end

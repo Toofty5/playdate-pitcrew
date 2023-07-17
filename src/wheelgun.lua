@@ -35,7 +35,7 @@ function Wheelgun:update()
         self:moveTo(POS_X+dx , POS_Y+dy)
 
         if playdate.buttonJustPressed(playdate.kButtonUp) then
-            nut = self:try(self.rotation, self.wheel.nuts)
+            nut = self:try(self.wheel, self.rotation)
         end
     elseif self.state == "success" then
         print("success")
@@ -59,7 +59,9 @@ function Wheelgun:update()
 end
 
 
-function Wheelgun:try(rotation, nuts)
+function Wheelgun:try(wheel)
+  local nuts = wheel.nuts
+  local rotation = self.rotation
   if self.mode == "loosen" then
     self:setImage(img_far)
     for i = 1, #nuts do
@@ -101,7 +103,6 @@ end
 
 function Wheelgun:reset()
     self.state = "ready"
-    print("ready")
 end
 
 class("Reticle").extends(gfx.sprite)

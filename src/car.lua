@@ -4,15 +4,15 @@ local f1_img = gfx.image.new("img/car_f1.png")
 class("Car").extends(gfx.sprite)
 
 function Car:init(num_nuts, car_type)
-  self.num_nuts = num_nuts
-  self.car_type = car_type
-  self.wheel = Wheel(self, "mounted")
-  self.rear_wheel = Wheel(self, "rear")
   self:setImage(f1_img)
   self:setCenter(.22, .64)
   self:add()
   self:setZIndex(-1)
   self:roll_in()
+  self.num_nuts = num_nuts
+  self.car_type = car_type
+  self.wheel = Wheel(self, "mounted")
+  self.rear_wheel = Wheel(self, "rear")
 end
 
 function Car:update()
