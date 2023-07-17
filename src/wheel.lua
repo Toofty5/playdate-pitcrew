@@ -13,8 +13,9 @@ gfx.popContext()
 
 class('Wheel').extends(gfx.sprite)
 
-function Wheel:init(num_nuts, state)
-  self.num_nuts = num_nuts
+function Wheel:init(car, state)
+  self.car = car
+  self.num_nuts = car.num_nuts
   self.state = state
   self:setImage(wheel_img)
   self.nut_offset = 25
@@ -22,45 +23,43 @@ function Wheel:init(num_nuts, state)
   self.init_rotation = math.random(360)
   self.rotation = self.init_rotation
 
-  self:moveTo(200,140)
   self:setZIndex(0)
 
   if self.state == "mounted" then
-    self.car = Car(self)
-    self.nuts_mounted = num_nuts
-    for i = 1, num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
-
+    self.a = car.a
+    for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
   elseif self.state == "fresh" then
-    self.nuts_mounted = 0
-    for i = 1, num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
+    for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
     self:slide_in()
   elseif self.state == "rear" then
-    for i = 1, num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
+    for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
   end
 
   self:add()
-
-
 end
 
 
 function Wheel:update()
-    self.rotation = self.init_rotation + (self.x * 6/math.pi)
-    if self.state == "rear" then
-    else
-      self:moveTo(self.a:currentValue())
-    end
+  self.rotation = self.init_rotation + (self.x * 6/math.pi)
 
-    if self.state == "loose" and 
-      playdate.buttonJustPressed(playdate.kButtonDown) then
-        self:unmount()
-    elseif self.state == "unmounted" and
-      self.a:ended() then
+  if self.state == "rear" then
+    self:moveTo(self.car.a:currentValue():offsetBy(1000,0))
+  else
+    self:moveTo(self.a:currentValue())
+  end
+
+  if self.state == "loose" and playdate.buttonJustPressed(playdate.kButtonDown) then
+      self:unmount()
+  elseif self.state == "unmounted" then
+    self:moveTo(self.a:currentValue())
+    if self.a:ended() then
       self.state = "gone"
       self:remove()
     end
-
+  end
 end
+
+
 
 function Wheel:roll_in()
     local duration = 1000
@@ -94,16 +93,25 @@ end
 
 function Wheel:remove_nut(index)
     self.nuts[index]:pop_off()
-    self.nuts_mounted -= 1
-    if self.nuts_mounted == 0 then 
+    if self:nuts_mounted() == 0 then 
       self.state = "loose"
     end
 end
 
 function Wheel:add_nut(index)
   self.nuts[index]:put_on()
-    self.nuts_mounted += 1
-    if self.nuts_mounted == self.num_nuts then 
-      self.state = "ready"
-    end
+
+  if self:nuts_mounted() == self.num_nuts then 
+    self.state = "ready"
+  end
 end
+
+function Wheel:nuts_mounted()
+  local count = 0
+  for i, nut in pairs(self.nuts) do
+    if nut.is_present then count += 1 end
+  end
+  return count
+end
+
+

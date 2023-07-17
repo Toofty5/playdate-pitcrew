@@ -3,28 +3,20 @@ local f1_img = gfx.image.new("img/car_f1.png")
 
 class("Car").extends(gfx.sprite)
 
-function Car:init(wheel)
-  self.wheel = wheel
-  self.rear_wheel = Wheel(wheel.num_nuts, "rear")
+function Car:init(num_nuts, car_type)
   self:setImage(f1_img)
   self:setCenter(.22, .64)
   self:add()
   self:setZIndex(-1)
+  self:roll_in()
+  self.num_nuts = num_nuts
+  self.car_type = car_type
+  self.wheel = Wheel(self, "mounted")
+  self.rear_wheel = Wheel(self, "rear")
 end
 
 function Car:update()
-  local wheel_state = self.wheel.state
-
-  if wheel_state =="mounted" or wheel_state == "rollout" then
-    self:moveTo(self.wheel:getPosition())
-  end
-
-  self.rear_wheel:moveTo(self.x+800, self.y)
-
-  if playdate.buttonJustPressed(playdate.kButtonA) then
-    print("rollout!")
-    self:roll_out()
-  end
+  self:moveTo(self.a:currentValue())
 end
 
 function Car:roll_out()

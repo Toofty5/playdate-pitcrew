@@ -9,24 +9,17 @@ import "car.lua"
 
 local gfx <const> = playdate.graphics
 
-local wheel = Wheel(6, "mounted")
 local wheelgun = Wheelgun()
-local car = wheel.car
+local car = Car(6, "f1")
+local wheel = car.wheel
 wheelgun:attach(wheel)
-wheel:roll_in()
 
 function playdate.update()
-    playdate.timer.updateTimers()
-    gfx.sprite.update()
-
-    if wheel.state == "gone" then
-      wheel = Wheel(6, "fresh")
-      wheel.car = car
-      car.wheel = wheel
-      wheelgun:attach(wheel)
-      wheelgun.mode = "tighten"
-    elseif wheel.state == "ready" then
-      wheel:roll_out()
-    end
-
+  playdate.timer.updateTimers()
+  gfx.sprite.update()
+  if wheel.state == "gone" then 
+    wheel = Wheel(car, "fresh")
+    car.wheel = wheel
+    wheelgun:attach(wheel)
+  end
 end
