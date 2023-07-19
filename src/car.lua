@@ -29,6 +29,7 @@ function Car:roll_out()
 end
 
 function Car:roll_in()
+  self.state = "new"
     local duration = 1000
     local ls1 = playdate.geometry.lineSegment.new(1500,140, 200,140)
     local easing = playdate.easingFunctions.outQuint

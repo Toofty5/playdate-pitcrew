@@ -15,13 +15,21 @@ local wheel = car.wheel
 wheelgun:attach(wheel)
 
 function playdate.update()
-  playdate.timer.updateTimers()
-  gfx.sprite.update()
+  if car.state == "new" and car.a:ended() then
+    car.state = "waiting"
+    playdate.resetElapsedTime()
+  end
+
+  if wheel.state == "ready" then
+    print(playdate.getElapsedTime())
+  end
+
   if wheel.state == "gone" then 
     wheel = Wheel(car, "fresh")
     car.wheel = wheel
     wheelgun:attach(wheel)
     wheelgun.mode = "tighten"
   end
-
+  playdate.timer.updateTimers()
+  gfx.sprite.update()
 end
