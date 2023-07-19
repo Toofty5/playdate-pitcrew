@@ -24,8 +24,4 @@ function playdate.update()
     wheelgun.mode = "tighten"
   end
 
-  if wheel.state == "ready" then
-    print("wheel is ready")
-    car:roll_out()
-  end
 end

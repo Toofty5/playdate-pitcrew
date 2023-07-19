@@ -45,7 +45,7 @@ function Wheel:update()
   if self.state == "rear" then
     self:moveTo(self.car.a:currentValue():offsetBy(1000,0))
   else
-    self:moveTo(self.car.a:currentValue())
+    self:moveTo(self.a:currentValue())
   end
 
   if self.state == "loose" and playdate.buttonJustPressed(playdate.kButtonDown) then
@@ -88,6 +88,8 @@ function Wheel:add_nut(index)
   self.nuts[index]:put_on()
   if self:nuts_mounted() == self.num_nuts then 
     self.state = "ready"
+    self.car:roll_out()
+    self.a = self.car.a
   end
 end
 
