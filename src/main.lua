@@ -10,7 +10,7 @@ import "car.lua"
 local gfx <const> = playdate.graphics
 
 local wheelgun = Wheelgun()
-local car = Car(6, "f1")
+local car = Car(math.random(2,8), "f1")
 local wheel = car.wheel
 wheelgun:attach(wheel)
 local timer_started = false
@@ -35,9 +35,10 @@ function playdate.update()
   end
 
   if car.state =="rollout" and car.a:ended() then
-    car = Car(6,f1)
+    car = Car(math.random(2,8),f1)
     wheel = car.wheel
     wheelgun:attach(wheel)
+    wheelgun.mode = "loosen"
   end
 
   playdate.timer.updateTimers()
