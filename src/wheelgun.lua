@@ -38,7 +38,6 @@ function Wheelgun:update()
             nut = self:try(self.wheel, self.rotation)
         end
     elseif self.state == "success" then
-        print("success")
         self:moveTo(nut.x, nut.y)
         if self.mode == "loosen" then
           self.wheel:remove_nut(nut.pos)
@@ -50,7 +49,6 @@ function Wheelgun:update()
         playdate.timer.performAfterDelay(SUCCESS_TIME, self.reset, self)
 
     elseif self.state == "fail" then
-        print("fail")
         local x = self.wheel.x + 25 * math.cos(math.rad(self.rotation)) + math.random(-5,5)
         local y = self.wheel.y + 25 * math.sin(math.rad(self.rotation)) + math.random(-5,5)
         self:moveTo(x, y)
