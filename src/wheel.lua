@@ -59,7 +59,12 @@ function Wheel:update()
   end
 end
 
-
+function Wheel:remove()
+  for i,nut in pairs(self.nuts) do
+    nut:remove()
+  end
+  gfx.sprite.remove(self)
+end
 
 function Wheel:slide_in()
     local duration = 400

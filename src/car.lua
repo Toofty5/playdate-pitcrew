@@ -17,6 +17,11 @@ end
 
 function Car:update()
   self:moveTo(self.a:currentValue())
+
+  if self.state == "new" and self.a:ended() then
+    self.state = "waiting"
+  end
+
 end
 
 function Car:roll_out()
@@ -33,4 +38,10 @@ function Car:roll_in()
     local ls1 = playdate.geometry.lineSegment.new(1500,140, 200,140)
     local easing = playdate.easingFunctions.outQuint
     self.a = gfx.animator.new(duration, ls1, easing)
+end
+
+function Car:remove()
+  self.rear_wheel:remove()
+  self.wheel:remove()
+  gfx.sprite.remove(self)
 end

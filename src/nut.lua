@@ -45,7 +45,7 @@ class("LooseNut").extends(gfx.sprite)
 LooseNut.gravity = 10 
 
 function LooseNut:init(x,y)
-    self:setImage(gfx.image.new("img/nut.png"))
+    self:setImage(nut_img)
     self:setZIndex(10)
     local direction = math.random(210,330)
     local velocity = 40

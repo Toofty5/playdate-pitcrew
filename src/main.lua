@@ -16,8 +16,11 @@ wheelgun:attach(wheel)
 local timer_started = false
 
 function playdate.update()
-  if car.state == "new" and car.a:ended() then
-    car.state = "waiting"
+  if playdate.buttonJustPressed(playdate.kButtonB) then
+    car:roll_out()
+  end
+    print(gfx.sprite.spriteCount())
+  if car.state == "waiting" and not timer_started then
     playdate.resetElapsedTime()
     timer_started = true
   end
@@ -28,6 +31,7 @@ function playdate.update()
   end
 
   if wheel.state == "gone" then 
+    wheel:remove()
     wheel = Wheel(car, "fresh")
     car.wheel = wheel
     wheelgun:attach(wheel)
@@ -35,6 +39,7 @@ function playdate.update()
   end
 
   if car.state =="rollout" and car.a:ended() then
+    car:remove()
     car = Car(math.random(2,8),f1)
     wheel = car.wheel
     wheelgun:attach(wheel)
