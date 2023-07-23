@@ -19,7 +19,6 @@ function playdate.update()
   if playdate.buttonJustPressed(playdate.kButtonB) then
     car:roll_out()
   end
-    print(gfx.sprite.spriteCount())
   if car.state == "waiting" and not timer_started then
     playdate.resetElapsedTime()
     timer_started = true
@@ -49,3 +48,5 @@ function playdate.update()
   playdate.timer.updateTimers()
   gfx.sprite.update()
 end
+
+

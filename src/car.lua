@@ -26,18 +26,20 @@ end
 
 function Car:roll_out()
   self.state = "rollout"
-  local duration = 1200
-  local ls1 = playdate.geometry.lineSegment.new(200,140, -2000,140)
-  local easing = playdate.easingFunctions.inQuint
-  self.a = gfx.animator.new(duration, ls1, easing)
+    local durations = {100, 1200}
+    local ls1 = playdate.geometry.lineSegment.new(200,100, 200,140)
+    local ls2 = playdate.geometry.lineSegment.new(200,140, -2000, 140)
+    local easings = {playdate.easingFunctions.linear, playdate.easingFunctions.inQuint}
+    self.a = gfx.animator.new(durations, {ls1, ls2}, easings)
 end
 
 function Car:roll_in()
   self.state = "new"
-    local duration = 1000
+    local durations = {800, 100}
     local ls1 = playdate.geometry.lineSegment.new(1500,140, 200,140)
-    local easing = playdate.easingFunctions.outQuint
-    self.a = gfx.animator.new(duration, ls1, easing)
+    local ls2 = playdate.geometry.lineSegment.new(200,140, 200, 100)
+    local easings = {playdate.easingFunctions.outQuint, playdate.easingFunctions.linear}
+    self.a = gfx.animator.new(durations, {ls1, ls2}, easings)
 end
 
 function Car:remove()

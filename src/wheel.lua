@@ -4,6 +4,7 @@ local width, height = 200,200
 local wheel_img = gfx.image.new(width,height)
 local unmount
 
+
 gfx.pushContext(wheel_img)
     gfx.setColor(gfx.kColorBlack)
     gfx.fillCircleAtPoint(width/2, height/2, WHEEL_RADIUS)
@@ -26,12 +27,13 @@ function Wheel:init(car, state)
   self:setZIndex(0)
 
   if self.state == "mounted" then
-    self.a = car.a
+    self.is_attached = true
     for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
   elseif self.state == "fresh" then
     for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
     self:slide_in()
   elseif self.state == "rear" then
+    self.is_attached = true
     for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
   end
 
@@ -43,12 +45,13 @@ function Wheel:update()
   self.rotation = self.init_rotation + (self.x * 6/math.pi)
 
   if self.state == "rear" then
-    self:moveTo(self.car.a:currentValue():offsetBy(1000,0))
-  else
+    self:moveTo(self.car.a:currentValue():offsetBy(800,0))
+  elseif self.state == "mounted" or self.state == "ready" then
+    local axle = self.car.a:currentValue()
+    self:moveTo(axle.x, math.min(140, axle.y+30))
+  elseif self.state == "fresh" then
     self:moveTo(self.a:currentValue())
-  end
-
-  if self.state == "loose" and playdate.buttonJustPressed(playdate.kButtonDown) then
+  elseif self.state == "loose" and playdate.buttonJustPressed(playdate.kButtonDown) then
       self:unmount()
   elseif self.state == "unmounted" then
     self:moveTo(self.a:currentValue())
