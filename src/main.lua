@@ -6,6 +6,7 @@ import "wheel.lua"
 import "wheelgun.lua"
 import "nut.lua"
 import "car.lua"
+import "ui.lua"
 
 local gfx <const> = playdate.graphics
 
@@ -14,6 +15,8 @@ local car = Car(math.random(2,8), "f1")
 local wheel = car.wheel
 wheelgun:attach(wheel)
 local timer_started = false
+local reticle = Reticle(wheelgun)
+local pit_time = PitTimer()
 
 function playdate.update()
   if playdate.buttonJustPressed(playdate.kButtonB) then

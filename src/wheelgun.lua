@@ -20,7 +20,6 @@ function Wheelgun:init()
     self:setImage(img_close)
     local w,h = self:getImage():getSize()
     self.rotation = 0
-    self.reticle = Reticle(self)
     self.mode = "loosen"
     self:setCenter(0.5, 0.15)
     self:add()
@@ -103,28 +102,3 @@ function Wheelgun:reset()
     self.state = "ready"
 end
 
-class("Reticle").extends(gfx.sprite)
-
-function Reticle:init(wheelgun)
-    local reticle_img = gfx.image.new(50,50)
-    self:setImage(reticle_img)
-    gfx.pushContext(reticle_img)
-        gfx.fillCircleAtPoint(25,25,15)
-        gfx.setColor(gfx.kColorClear)
-        gfx.fillCircleAtPoint(25,25,13)
-        gfx.setColor(gfx.kColorBlack)
-    gfx.popContext()
-
-    self.wheelgun = wheelgun
-    self:setZIndex(100)
-    self:add()
-end
-
-
-function Reticle:update()
-    local x,y = self.wheelgun.wheel:getPosition()
-    local rotation = math.rad(self.wheelgun.rotation)
-    local dx = self.wheelgun.wheel.nut_offset * math.cos(rotation)
-    local dy = self.wheelgun.wheel.nut_offset * math.sin(rotation)
-    self:moveTo(x+dx,y+dy)
-end
