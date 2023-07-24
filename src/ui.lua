@@ -29,7 +29,7 @@ class("PitTimer").extends(gfx.sprite)
 
 function PitTimer:init()
   self:moveTo(1,1)
-  self:setImage(gfx.image.new(100, 100))
+  self:setImage(gfx.image.new(100, 30))
   self:add()
   self:setCenter(0,0)
   self:setZIndex(30)
@@ -40,6 +40,15 @@ function PitTimer:update()
   gfx.pushContext(self:getImage())
     gfx.clear(gfx.kColorClear)
     local elapsed = playdate.getCurrentTimeMilliseconds() - self.start_time 
-    gfx.drawText(elapsed, 1,1)
+
+    -- local seconds = string.format("%5d", elapsed//1000)
+    -- local millis = string.format("%03d", elapsed % 1000)
+    -- gfx.drawText(seconds.."."..millis, 1,1)
+
+    gfx.drawText(elapsed/1000, 1,1)
   gfx.popContext()
+end
+
+function PitTimer:getTime()
+  return playdate.getCurrentTimeMilliseconds() - self.start_time 
 end

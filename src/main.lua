@@ -14,21 +14,22 @@ local wheelgun = Wheelgun()
 local car = Car(math.random(2,8), "f1")
 local wheel = car.wheel
 wheelgun:attach(wheel)
-local timer_started = false
 local reticle = Reticle(wheelgun)
-local pit_time = PitTimer()
+local pit_time
+local timer_started = false
 
 function playdate.update()
   if playdate.buttonJustPressed(playdate.kButtonB) then
     car:roll_out()
   end
   if car.state == "waiting" and not timer_started then
-    playdate.resetElapsedTime()
+    pit_time = PitTimer()
     timer_started = true
   end
 
   if wheel.state == "ready" and timer_started then
-    print(playdate.getElapsedTime())
+    print(pit_time:getTime()/1000)
+    pit_time:remove()
     timer_started = false
   end
 
