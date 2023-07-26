@@ -38,7 +38,7 @@ end
 
 function PitTimer:update()
   gfx.pushContext(self:getImage())
-    gfx.clear(gfx.kColorClear)
+  gfx.clear(gfx.kColorClear)
     local elapsed = playdate.getCurrentTimeMilliseconds() - self.start_time 
 
     -- local seconds = string.format("%5d", elapsed//1000)
@@ -51,4 +51,40 @@ end
 
 function PitTimer:getTime()
   return playdate.getCurrentTimeMilliseconds() - self.start_time 
+end
+
+class("RaceText").extends(gfx.sprite)
+
+function RaceText:init(content, x, y)
+  self:setCenter(0,0)
+  self:setZIndex(400)
+  self.content = {}
+  self:setImage(gfx.image.new(500,20))
+  self:add()
+  self:moveTo(0,50)
+  local spacing = 15 
+  for i = 1, #content do
+    local path = playdate.geometry.lineSegment.new(400,0, (i-1) * spacing, 0)
+    local duration = 500
+    local easing = playdate.easingFunctions.outBack
+    local delay = i * 20
+    self.content[i] = {content:sub(i,i), gfx.animator.new(duration, path, easing, delay)}
+  end
+end
+
+function RaceText:ended()
+  return self.content[#self.content][2]:ended()
+end
+
+function RaceText:update()
+  if not self:ended() then
+    gfx.pushContext(self:getImage())
+      gfx.clear(gfx.kColorClear)
+      for i, v in pairs(self.content) do
+        local c, a = table.unpack(v) 
+        local point = a:currentValue()
+        gfx.drawText(c, point.x, point.y)
+      end
+    gfx.popContext()
+  end
 end

@@ -17,6 +17,7 @@ wheelgun:attach(wheel)
 local reticle = Reticle(wheelgun)
 local pit_time
 local timer_started = false
+local race_text = RaceText("Car incoming")
 
 function playdate.update()
   if playdate.buttonJustPressed(playdate.kButtonB) then
