@@ -8,6 +8,12 @@ local TOLERANCE <const> = 20
 local img_close <const> = gfx.image.new("img/wheelgun.png")
 local img_far <const> = gfx.image.new("img/wheelgun_sm.png")
 
+local sfx = playdate.sound
+-- local wheelgun_sound = playdate.sound.sampleplayer.new("img/wheelgun.wav")
+local synth = playdate.sound.synth.new(playdate.sound.kWaveSquare)
+synth:setADSR(0,.2,0,.2)
+synth:setFrequencyMod(sfx.envelope.new(0,.2,0,.2))
+
 
 class("Wheelgun").extends(gfx.sprite)
 
@@ -34,7 +40,10 @@ function Wheelgun:update()
         self:moveTo(POS_X+dx , POS_Y+dy)
 
         if playdate.buttonJustPressed(playdate.kButtonUp) then
-            nut = self:try(self.wheel, self.rotation)
+          
+          nut = self:try(self.wheel, self.rotation)
+          -- wheelgun_sound:play()
+          synth:playNote("A", 1, 1)
         end
     elseif self.state == "success" then
         self:moveTo(nut.x, nut.y)
