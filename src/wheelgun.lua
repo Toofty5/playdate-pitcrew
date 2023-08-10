@@ -11,8 +11,10 @@ local img_far <const> = gfx.image.new("img/wheelgun_sm.png")
 local sfx = playdate.sound
 -- local wheelgun_sound = playdate.sound.sampleplayer.new("img/wheelgun.wav")
 local synth = playdate.sound.synth.new(playdate.sound.kWaveSquare)
+local envelope = sfx.envelope.new(0,.2,0,.2)
+envelope:setScale(-1)
 synth:setADSR(0,.2,0,.2)
-synth:setFrequencyMod(sfx.envelope.new(0,.2,0,.2))
+synth:setFrequencyMod(envelope)
 
 
 class("Wheelgun").extends(gfx.sprite)
