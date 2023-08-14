@@ -8,12 +8,13 @@ import "nut.lua"
 import "car.lua"
 import "ui.lua"
 
+game_state = init
+
 local gfx <const> = playdate.graphics
 
-local wheelgun = Wheelgun()
 local car = Car(math.random(2,8), "f1")
 local wheel = car.wheel
-wheelgun:attach(wheel)
+local wheelgun = Wheelgun(wheel)
 local reticle = Reticle(wheelgun)
 local pit_time
 local timer_started = false

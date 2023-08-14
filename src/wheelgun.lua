@@ -20,8 +20,8 @@ synth:setFrequencyMod(envelope)
 class("Wheelgun").extends(gfx.sprite)
 
 
-function Wheelgun:init()
-    
+function Wheelgun:init(wheel)
+    self:attach(wheel)
     local width, height = self:getSize()
     self.state = "ready"
     self:setZIndex(200)
