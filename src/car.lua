@@ -11,7 +11,7 @@ function Car:init(num_nuts, car_type)
   self:roll_in()
   self.num_nuts = num_nuts
   self.car_type = car_type
-  self.wheel = Wheel(self, "mounted")
+  self.wheel = OldWheel(self)
   self.rear_wheel = Wheel(self, "rear")
 end
 

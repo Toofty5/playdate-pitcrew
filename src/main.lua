@@ -37,7 +37,7 @@ function playdate.update()
 
   if wheel.state == "gone" then 
     wheel:remove()
-    wheel = Wheel(car, "fresh")
+    wheel = NewWheel(car)
     car.wheel = wheel
     wheelgun:attach(wheel)
     wheelgun.mode = "tighten"

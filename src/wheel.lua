@@ -26,13 +26,7 @@ function Wheel:init(car, state)
 
   self:setZIndex(0)
 
-  if self.state == "mounted" then
-    self.is_attached = true
-    for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
-  elseif self.state == "fresh" then
-    for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
-    self:slide_in()
-  elseif self.state == "rear" then
+  if self.state == "rear" then
     self.is_attached = true
     for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
   end
@@ -60,6 +54,20 @@ function Wheel:update()
       self:remove()
     end
   end
+end
+
+class('OldWheel').extends(Wheel)
+function OldWheel:init(car)
+  Wheel.init(self, car, 'mounted')
+  self.is_attached = true
+  for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
+end
+
+class('NewWheel').extends(Wheel)
+function NewWheel:init(car)
+  Wheel.init(self,car,'fresh')
+  for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
+  self:slide_in()
 end
 
 function Wheel:remove()
