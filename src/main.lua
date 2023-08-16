@@ -7,6 +7,7 @@ import "wheelgun.lua"
 import "nut.lua"
 import "car.lua"
 import "ui.lua"
+import "game.lua"
 
 game_state = init
 
@@ -16,24 +17,13 @@ local car = Car(math.random(2,8), "f1")
 local wheel = car.wheel
 local wheelgun = Wheelgun(wheel)
 local reticle = Reticle(wheelgun)
-local pit_time
-local timer_started = false
 local race_text = RaceText("Car incoming")
 
 function playdate.update()
   if playdate.buttonJustPressed(playdate.kButtonB) then
     car:roll_out()
   end
-  if car.state == "waiting" and not timer_started then
-    pit_time = PitTimer()
-    timer_started = true
-  end
 
-  if wheel.state == "ready" and timer_started then
-    print(pit_time:getTime()/1000)
-    pit_time:remove()
-    timer_started = false
-  end
 
   if wheel.state == "gone" then 
     wheel:remove()

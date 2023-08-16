@@ -1,3 +1,6 @@
+import "game.lua"
+import "ui.lua"
+
 local gfx <const> = playdate.graphics
 local f1_img = gfx.image.new("img/car_f1.png")
 
@@ -13,6 +16,7 @@ function Car:init(num_nuts, car_type)
   self.car_type = car_type
   self.wheel = OldWheel(self)
   self.rear_wheel = Wheel(self, "rear")
+  self.timer_start = false
 end
 
 function Car:update()
@@ -22,6 +26,16 @@ function Car:update()
     self.state = "waiting"
   end
 
+  if self.state == "waiting" and not self.timer_started then
+    pit_time = PitTimer()
+    self.timer_started = true
+  end
+
+  if self.wheel.state == "ready" and self.timer_started then
+    print(pit_time:getTime()/1000)
+    pit_time:remove()
+    self.timer_started = false
+  end
 end
 
 function Car:roll_out()
