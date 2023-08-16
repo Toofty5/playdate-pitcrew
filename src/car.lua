@@ -24,9 +24,6 @@ function Car:update()
 
   if self.state == "new" and self.a:ended() then
     self.state = "waiting"
-  end
-
-  if self.state == "waiting" and not self.timer_started then
     pit_time = PitTimer()
     self.timer_started = true
   end
