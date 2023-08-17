@@ -16,7 +16,7 @@ function Car:init(num_nuts, car_type)
   self.num_nuts = num_nuts
   self.car_type = car_type
   self.wheel = OldWheel(self)
-  self.rear_wheel = Wheel(self, "rear")
+  self.rear_wheel = RearWheel(self)
   self.timer_start = false
 end
 

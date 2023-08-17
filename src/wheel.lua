@@ -37,23 +37,6 @@ end
 
 function Wheel:update()
   self.rotation = self.init_rotation + (self.x * 6/math.pi)
-
-  if self.state == "rear" then
-    self:moveTo(self.car.a:currentValue():offsetBy(800,0))
-  elseif self.state == "mounted" or self.state == "ready" then
-    local axle = self.car.a:currentValue()
-    self:moveTo(axle.x, math.min(140, axle.y+30))
-  elseif self.state == "fresh" then
-    self:moveTo(self.a:currentValue())
-  elseif self.state == "loose" and playdate.buttonJustPressed(playdate.kButtonDown) then
-      self:unmount()
-  elseif self.state == "unmounted" then
-    self:moveTo(self.a:currentValue())
-    if self.a:ended() then
-      self.state = "gone"
-      self:remove()
-    end
-  end
 end
 
 class('OldWheel').extends(Wheel)
@@ -63,12 +46,49 @@ function OldWheel:init(car)
   for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
 end
 
+function OldWheel:update()
+  Wheel.update(self)
+  if self.state == "mounted" then
+    local axle = self.car.a:currentValue()
+    self:moveTo(axle.x, math.min(140, axle.y+30))
+  elseif self.state == "loose" and playdate.buttonJustPressed(playdate.kButtonDown) then
+    self:unmount()
+  elseif self.state == "leaving" then
+
+    if self.a:ended() then
+      self.state = "gone"
+      self:remove()
+    end
+  end
+end
+
 class('NewWheel').extends(Wheel)
 
 function NewWheel:init(car)
   Wheel.init(self,car,'fresh')
   for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
   self:slide_in()
+end
+
+function NewWheel:update()
+  Wheel.update(self)
+  if self.state == "fresh" then
+    self:moveTo(self.a:currentValue())
+  elseif self.state == "ready" then
+    local axle = self.car.a:currentValue()
+    self:moveTo(axle.x, math.min(140, axle.y+30))
+  end
+end
+
+class('RearWheel').extends(Wheel)
+function RearWheel:init(car)
+  Wheel.init(self,car,'rear')
+  for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
+end
+
+function RearWheel:update()
+  Wheel.update(self)
+  self:moveTo(self.car.a:currentValue():offsetBy(800,0))
 end
 
 function Wheel:remove()
@@ -91,7 +111,7 @@ function Wheel:unmount()
     local ls1 = playdate.geometry.lineSegment.new(200,140, 200,400)
     local easing = playdate.easingFunctions.easeInBack
     self.a = gfx.animator.new(duration, ls1, easing) 
-    self.state = "unmounted"
+    self.state = "leaving"
 end
 
 function Wheel:remove_nut(index)
