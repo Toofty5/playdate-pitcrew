@@ -64,6 +64,7 @@ function OldWheel:init(car)
 end
 
 class('NewWheel').extends(Wheel)
+
 function NewWheel:init(car)
   Wheel.init(self,car,'fresh')
   for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, false)) end

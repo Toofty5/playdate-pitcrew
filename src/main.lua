@@ -12,31 +12,29 @@ import "game.lua"
 local gfx <const> = playdate.graphics
 
 
-GAME.car = Car(math.random(2,8), "f1")
-GAME.wheel = GAME.car.wheel
-GAME.wheelgun = Wheelgun(GAME.wheel)
-GAME.reticle = Reticle(GAME.wheelgun)
-GAME.race_text = RaceText("Car incoming")
-GAME.state = "init"
+game.car = Car(math.random(2,8), "f1")
+game.wheel = game.car.wheel
+game.wheelgun = Wheelgun(game.wheel)
+game.reticle = Reticle(game.wheelgun)
+game.race_text = RaceText("Car incoming")
+game.state = "init"
 
 
 
 function playdate.update()
-  if GAME.state == "waiting" then
+  if game.state == "waiting" then
     if playdate.buttonJustPressed(playdate.kButtonB) then
-      car:roll_out()
+      game.car:roll_out()
     end
 
 
-    if wheel.state == "gone" then 
-    end
 
-    if car.state =="rollout" and car.a:ended() then
-      car:remove()
-      car = Car(math.random(2,8),f1)
-      wheel = car.wheel
-      wheelgun:attach(wheel)
-      wheelgun.mode = "loosen"
+    if game.car.state =="rollout" and game.car.a:ended() then
+      game.car:remove()
+      game.car = Car(math.random(2,8),f1)
+      game.wheel = game.car.wheel
+      game.wheelgun:attach(game.wheel)
+      game.wheelgun.mode = "loosen"
     end
   end
 

@@ -1,5 +1,6 @@
 import "ui.lua"
 import "game.lua"
+import "CoreLibs/timer"
 
 local gfx <const> = playdate.graphics
 local f1_img = gfx.image.new("img/car_f1.png")
@@ -20,7 +21,6 @@ function Car:init(num_nuts, car_type)
 end
 
 function Car:update()
-  print(GAME.wheel)
   self:moveTo(self.a:currentValue())
 
   if self.state == "new" and self.a:ended() then
@@ -37,10 +37,9 @@ function Car:update()
 
   if self.wheel.state == "gone" then
       self.wheel:remove()
-      self.wheel = NewWheel(car)
-      car.wheel = wheel
-      wheelgun:attach(wheel)
-      wheelgun.mode = "tighten"
+      self.wheel = NewWheel(game.car)
+      game.wheelgun:attach(self.wheel)
+      game.wheelgun.mode = "tighten"
   end
 end
 
@@ -51,6 +50,7 @@ function Car:roll_out()
     local ls2 = playdate.geometry.lineSegment.new(200,140, -2000, 140)
     local easings = {playdate.easingFunctions.linear, playdate.easingFunctions.inQuint}
     self.a = gfx.animator.new(durations, {ls1, ls2}, easings)
+    playdate.timer.performAfterDelay(durations[1]+durations[2], function(x) game.state = "waiting" end)
 end
 
 function Car:roll_in()
