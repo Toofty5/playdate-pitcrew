@@ -1,5 +1,5 @@
-import "game.lua"
 import "ui.lua"
+import "game.lua"
 
 local gfx <const> = playdate.graphics
 local f1_img = gfx.image.new("img/car_f1.png")
@@ -20,6 +20,7 @@ function Car:init(num_nuts, car_type)
 end
 
 function Car:update()
+  print(GAME.wheel)
   self:moveTo(self.a:currentValue())
 
   if self.state == "new" and self.a:ended() then
@@ -32,6 +33,14 @@ function Car:update()
     print(pit_time:getTime()/1000)
     pit_time:remove()
     self.timer_started = false
+  end
+
+  if self.wheel.state == "gone" then
+      self.wheel:remove()
+      self.wheel = NewWheel(car)
+      car.wheel = wheel
+      wheelgun:attach(wheel)
+      wheelgun.mode = "tighten"
   end
 end
 

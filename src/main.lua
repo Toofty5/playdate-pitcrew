@@ -9,36 +9,35 @@ import "car.lua"
 import "ui.lua"
 import "game.lua"
 
-game_state = init
-
 local gfx <const> = playdate.graphics
 
-local car = Car(math.random(2,8), "f1")
-local wheel = car.wheel
-local wheelgun = Wheelgun(wheel)
-local reticle = Reticle(wheelgun)
-local race_text = RaceText("Car incoming")
+
+GAME.car = Car(math.random(2,8), "f1")
+GAME.wheel = GAME.car.wheel
+GAME.wheelgun = Wheelgun(GAME.wheel)
+GAME.reticle = Reticle(GAME.wheelgun)
+GAME.race_text = RaceText("Car incoming")
+GAME.state = "init"
+
+
 
 function playdate.update()
-  if playdate.buttonJustPressed(playdate.kButtonB) then
-    car:roll_out()
-  end
+  if GAME.state == "waiting" then
+    if playdate.buttonJustPressed(playdate.kButtonB) then
+      car:roll_out()
+    end
 
 
-  if wheel.state == "gone" then 
-    wheel:remove()
-    wheel = NewWheel(car)
-    car.wheel = wheel
-    wheelgun:attach(wheel)
-    wheelgun.mode = "tighten"
-  end
+    if wheel.state == "gone" then 
+    end
 
-  if car.state =="rollout" and car.a:ended() then
-    car:remove()
-    car = Car(math.random(2,8),f1)
-    wheel = car.wheel
-    wheelgun:attach(wheel)
-    wheelgun.mode = "loosen"
+    if car.state =="rollout" and car.a:ended() then
+      car:remove()
+      car = Car(math.random(2,8),f1)
+      wheel = car.wheel
+      wheelgun:attach(wheel)
+      wheelgun.mode = "loosen"
+    end
   end
 
   playdate.timer.updateTimers()

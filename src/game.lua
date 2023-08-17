@@ -1,1 +1,1 @@
-game_state = "init"
+GAME = {}
