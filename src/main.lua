@@ -27,8 +27,6 @@ function playdate.update()
       game.car:roll_out()
     end
 
-
-
     if game.car.state =="rollout" and game.car.a:ended() then
       game.car:remove()
       game.car = Car(math.random(2,8),f1)
