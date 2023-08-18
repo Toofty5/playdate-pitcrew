@@ -45,7 +45,6 @@ function Wheelgun:update()
           
           nut = self:try(self.wheel, self.rotation)
           -- wheelgun_sound:play()
-          synth:playNote("A", 1, 1)
         end
     elseif self.state == "success" then
         self:moveTo(nut.x, nut.y)
@@ -68,6 +67,7 @@ end
 
 
 function Wheelgun:try(wheel)
+-- synth:playNote("A", 1, 1)
   local nuts = wheel.nuts
   local rotation = self.rotation
   if self.mode == "loosen" then

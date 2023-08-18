@@ -23,15 +23,8 @@ function Wheel:init(car, state)
   self.nuts = {}
   self.init_rotation = math.random(360)
   self.rotation = self.init_rotation
-
   self:setZIndex(0)
 
-  if self.state == "rear" then
-    self.is_attached = true
-    for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
-  end
-
-  self:add()
 end
 
 
@@ -44,6 +37,7 @@ function OldWheel:init(car)
   Wheel.init(self, car, 'mounted')
   self.is_attached = true
   for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
+  self:add()
 end
 
 function OldWheel:update()
@@ -54,7 +48,7 @@ function OldWheel:update()
   elseif self.state == "loose" and playdate.buttonJustPressed(playdate.kButtonDown) then
     self:unmount()
   elseif self.state == "leaving" then
-
+    self:moveTo(self.a:currentValue())
     if self.a:ended() then
       self.state = "gone"
       self:remove()
@@ -63,7 +57,6 @@ function OldWheel:update()
 end
 
 class('NewWheel').extends(Wheel)
-
 function NewWheel:init(car)
   Wheel.init(self,car,'fresh')
   for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
@@ -84,6 +77,7 @@ class('RearWheel').extends(Wheel)
 function RearWheel:init(car)
   Wheel.init(self,car,'rear')
   for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
+  self:add()
 end
 
 function RearWheel:update()
@@ -103,6 +97,8 @@ function Wheel:slide_in()
     local ls1 = playdate.geometry.lineSegment.new(480,300, 200,140)
     local easing = playdate.easingFunctions.outQuint
     self.a = gfx.animator.new(duration, ls1, easing)
+    self:moveTo(self.a:currentValue())
+    self:add()
 end
 
 
