@@ -59,7 +59,7 @@ function RaceText:init(content, x, y)
   self:setCenter(0,0)
   self:setZIndex(400)
   self.content = {}
-  self:setImage(gfx.image.new(400,20))
+  -- self:setImage(gfx.image.new(400,20))
   self:add()
   self:moveTo(0,50)
   local spacing = 15 
@@ -68,7 +68,14 @@ function RaceText:init(content, x, y)
     local duration = 500
     local easing = playdate.easingFunctions.outBack
     local delay = i * 20
-    self.content[i] = {content:sub(i,i), gfx.animator.new(duration, path, easing, delay)}
+    local img = gfx.image.new(10,10)
+    gfx.pushContext(img)
+      gfx.drawText(content:sub(i,i), 0,0)
+    gfx.popContext()
+
+    local spr = gfx.sprite.new(img)
+    spr:add()
+    self.content[i] = {spr, gfx.animator.new(duration, path, easing, delay)}
   end
 end
 
@@ -78,13 +85,14 @@ end
 
 function RaceText:update()
   if not self:ended() then
-    gfx.pushContext(self:getImage())
-      gfx.clear(gfx.kColorClear)
+    --gfx.pushContext(self:getImage())
+     -- gfx.clear(gfx.kColorClear)
       for i, v in pairs(self.content) do
         local c, a = table.unpack(v) 
         local point = a:currentValue()
-        gfx.drawText(c, point.x, point.y)
+        -- gfx.drawText(c, point.x, point.y)
+        c:moveTo(a:currentValue())
       end
-    gfx.popContext()
+    --gfx.popContext()
   end
 end
