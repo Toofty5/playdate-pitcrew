@@ -12,35 +12,50 @@ function Car:init(num_nuts, car_type)
   self:setCenter(.22, .64)
   self:add()
   self:setZIndex(-1)
-  self:roll_in()
+  -- self:roll_in()
   self.num_nuts = num_nuts
   self.car_type = car_type
   self.wheel = OldWheel(self)
   self.rear_wheel = RearWheel(self)
-  self.timer_start = false
+  self.timer_started = false
+  self.state = "notify"
+  self.incoming_note = RaceText("Car incoming!", 0, 0)
+  self:moveTo(0,-500)
 end
 
 function Car:update()
-  self:moveTo(self.a:currentValue())
 
-  if self.state == "new" and self.a:ended() then
-    self.state = "waiting"
-    pit_time = PitTimer()
-    self.timer_started = true
+  if self.state == "notify" then
+    if self.incoming_note:ended() then
+      self:roll_in()
+    end
+  else
+    if self.state == "new" and self.a:ended() then
+      self.state = "waiting"
+      pit_time = PitTimer()
+      self.timer_started = true
+      self.start_time = playdate.getCurrentTimeMilliseconds()
+    end
+
+    if self.wheel.state == "ready" and self.timer_started then
+      pit_time:remove()
+      self:roll_out()
+      self.timer_started = false
+    end
+
+    if self.wheel.state == "gone" then
+        self.wheel:remove()
+        self.wheel = NewWheel(game.car)
+        game.wheelgun:attach(self.wheel)
+        game.wheelgun.mode = "tighten"
+    end
+    self:moveTo(self.a:currentValue())
   end
 
-  if self.wheel.state == "ready" and self.timer_started then
-    print(pit_time:getTime()/1000)
-    pit_time:remove()
-    self.timer_started = false
-  end
+end
 
-  if self.wheel.state == "gone" then
-      self.wheel:remove()
-      self.wheel = NewWheel(game.car)
-      game.wheelgun:attach(self.wheel)
-      game.wheelgun.mode = "tighten"
-  end
+function Car:elapsed_time()
+  return playdate.getCurrentTimeMilliseconds() - self.start_time
 end
 
 function Car:roll_out()
@@ -67,3 +82,8 @@ function Car:remove()
   self.wheel:remove()
   gfx.sprite.remove(self)
 end
+
+function Car:get_axle()
+  return playdate.geometry.point.new(self.x, math.min(140, self.y + 30))
+end
+

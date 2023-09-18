@@ -24,7 +24,6 @@ function Wheel:init(car, state)
   self.init_rotation = math.random(360)
   self.rotation = self.init_rotation
   self:setZIndex(0)
-
 end
 
 
@@ -43,8 +42,7 @@ end
 function OldWheel:update()
   Wheel.update(self)
   if self.state == "mounted" then
-    local axle = self.car.a:currentValue()
-    self:moveTo(axle.x, math.min(140, axle.y+30))
+    self:moveTo(self.car:get_axle())
   elseif self.state == "loose" and playdate.buttonJustPressed(playdate.kButtonDown) then
     self:unmount()
   elseif self.state == "leaving" then
@@ -68,8 +66,7 @@ function NewWheel:update()
   if self.state == "fresh" then
     self:moveTo(self.a:currentValue())
   elseif self.state == "ready" then
-    local axle = self.car.a:currentValue()
-    self:moveTo(axle.x, math.min(140, axle.y+30))
+    self:moveTo(self.car:get_axle())
   end
 end
 
@@ -82,7 +79,7 @@ end
 
 function RearWheel:update()
   Wheel.update(self)
-  self:moveTo(self.car.a:currentValue():offsetBy(800,0))
+  self:moveTo(self.car.x + 800, self.car.y)
 end
 
 function Wheel:remove()
@@ -94,7 +91,8 @@ end
 
 function Wheel:slide_in()
     local duration = 400
-    local ls1 = playdate.geometry.lineSegment.new(480,300, 200,140)
+    local axle = self.car:get_axle()
+    local ls1 = playdate.geometry.lineSegment.new(480,300, axle.x, axle.y)
     local easing = playdate.easingFunctions.outQuint
     self.a = gfx.animator.new(duration, ls1, easing)
     self:moveTo(self.a:currentValue())
@@ -104,7 +102,8 @@ end
 
 function Wheel:unmount()
     local duration = 300
-    local ls1 = playdate.geometry.lineSegment.new(200,140, 200,400)
+    local axle = self.car:get_axle()
+    local ls1 = playdate.geometry.lineSegment.new(axle.x, axle.y, 200,400)
     local easing = playdate.easingFunctions.easeInBack
     self.a = gfx.animator.new(duration, ls1, easing) 
     self.state = "leaving"
@@ -120,9 +119,8 @@ end
 function Wheel:add_nut(index)
   self.nuts[index]:put_on()
   if self:nuts_mounted() == self.num_nuts then 
+    -- self.a = self.car.a
     self.state = "ready"
-    self.car:roll_out()
-    self.a = self.car.a
   end
 end
 

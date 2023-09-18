@@ -59,7 +59,7 @@ function RaceText:init(content, x, y)
   self:setCenter(0,0)
   self:setZIndex(400)
   self.content = {}
-  self:setImage(gfx.image.new(500,20))
+  self:setImage(gfx.image.new(400,20))
   self:add()
   self:moveTo(0,50)
   local spacing = 15 
