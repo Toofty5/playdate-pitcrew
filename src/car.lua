@@ -19,7 +19,7 @@ function Car:init(num_nuts, car_type)
   self.rear_wheel = RearWheel(self)
   self.timer_started = false
   self.state = "notify"
-  self.incoming_note = RaceText("Car incoming!", 0, 0)
+  self.incoming_note = RaceText("Car incoming!", 80, 30)
   self:moveTo(0,-500)
 end
 

@@ -1,3 +1,4 @@
+import "CoreLibs/animation"
 local gfx <const> = playdate.graphics
 
 class("Reticle").extends(gfx.sprite)
@@ -56,43 +57,59 @@ end
 class("RaceText").extends(gfx.sprite)
 
 function RaceText:init(content, x, y)
-  self:setCenter(0,0)
-  self:setZIndex(400)
-  self.content = {}
-  -- self:setImage(gfx.image.new(400,20))
-  self:add()
-  self:moveTo(0,50)
   local spacing = 15 
+  self:setCenter(0,0)
+  self:setImage(gfx.image.new(spacing * #content, 20))
+  self.blinker = gfx.animation.blinker.new(100, 100, false,10, false )
+  self:add()
+  self.content = {}
+  self.state = "entering"
   for i = 1, #content do
-    local path = playdate.geometry.lineSegment.new(400,0, (i-1) * spacing, 0)
-    local duration = 500
+    local path = playdate.geometry.lineSegment.new(x + 400, y , x + ((i-1) * spacing), y)
+    local duration = 300
     local easing = playdate.easingFunctions.outBack
     local delay = i * 20
-    local img = gfx.image.new(10,10)
+    local img = gfx.image.new(12,20)
+
     gfx.pushContext(img)
       gfx.drawText(content:sub(i,i), 0,0)
     gfx.popContext()
 
     local spr = gfx.sprite.new(img)
+    spr:setCenter(0,0)
+    spr:setZIndex(400)
     spr:add()
     self.content[i] = {spr, gfx.animator.new(duration, path, easing, delay)}
   end
 end
 
-function RaceText:ended()
+function RaceText:is_complete()
   return self.content[#self.content][2]:ended()
 end
 
+function RaceText:ended()
+  return self.state == "blinking" and not self.blinker.running
+end
+
 function RaceText:update()
-  if not self:ended() then
-    --gfx.pushContext(self:getImage())
-     -- gfx.clear(gfx.kColorClear)
-      for i, v in pairs(self.content) do
-        local c, a = table.unpack(v) 
-        local point = a:currentValue()
-        -- gfx.drawText(c, point.x, point.y)
-        c:moveTo(a:currentValue())
-      end
-    --gfx.popContext()
+  if self.state == "entering" then
+    for i, v in pairs(self.content) do
+      local c, a = table.unpack(v) 
+      local point = a:currentValue()
+      c:moveTo(a:currentValue())
+    end
+    if self:is_complete() then self:blink() end
+  elseif self.state == "blinking" then
+    for i,v in pairs(self.content) do
+      local c, a = table.unpack(v)
+      c:setVisible(self.blinker.on)
+    end
+    self.blinker:update()
+    print(self.blinker.on, self.blinker.counter)
   end
+end
+
+function RaceText:blink()
+  self.state = "blinking"
+  self.blinker:start()
 end

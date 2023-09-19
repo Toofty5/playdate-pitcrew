@@ -16,10 +16,7 @@ game.car = Car(math.random(2,8), "f1")
 game.wheel = game.car.wheel
 game.wheelgun = Wheelgun(game.wheel)
 game.reticle = Reticle(game.wheelgun)
-game.race_text = RaceText("Car incoming")
 game.state = "init"
-
-
 
 function playdate.update()
   if game.state == "waiting" then
