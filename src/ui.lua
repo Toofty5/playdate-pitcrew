@@ -113,3 +113,11 @@ function RaceText:blink()
   self.state = "blinking"
   self.blinker:start()
 end
+
+function RaceText:remove()
+  gfx.sprite.remove(self)
+  for i,v in pairs(self.content) do
+    local c,a = table.unpack(v)
+    c:remove()
+  end
+end

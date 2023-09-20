@@ -27,6 +27,7 @@ function Car:update()
 
   if self.state == "notify" then
     if self.incoming_note:ended() then
+      self.incoming_note:remove()
       self:roll_in()
     end
   else
