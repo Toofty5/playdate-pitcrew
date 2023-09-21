@@ -66,7 +66,7 @@ function RaceText:init(content, x, y)
   self.state = "entering"
   for i = 1, #content do
     local path = playdate.geometry.lineSegment.new(x + 400, y , x + ((i-1) * spacing), y)
-    local duration = 300
+    local duration = 200
     local easing = playdate.easingFunctions.outBack
     local delay = i * 20
     local img = gfx.image.new(12,20)
@@ -105,7 +105,6 @@ function RaceText:update()
       c:setVisible(self.blinker.on)
     end
     self.blinker:update()
-    print(self.blinker.on, self.blinker.counter)
   end
 end
 

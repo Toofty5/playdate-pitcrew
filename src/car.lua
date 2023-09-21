@@ -4,6 +4,8 @@ import "CoreLibs/timer"
 
 local gfx <const> = playdate.graphics
 local f1_img = gfx.image.new("img/car_f1.png")
+-- local f1_blurred = f1_img:blurredImage(2, 3, gfx.image.kDitherTypeDiagonalLine)
+
 
 class("Car").extends(gfx.sprite)
 
