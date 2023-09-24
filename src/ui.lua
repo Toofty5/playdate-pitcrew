@@ -104,7 +104,6 @@ function RaceText:update()
       local c, a = table.unpack(v)
       c:setVisible(self.blinker.on)
     end
-    self.blinker:update()
   end
 end
 
@@ -119,4 +118,37 @@ function RaceText:remove()
     local c,a = table.unpack(v)
     c:remove()
   end
+end
+
+class("FlashTime").extends(gfx.sprite)
+
+function FlashTime:init(time)
+  FlashTime.super.init(self)
+
+  self.blinker = gfx.animation.blinker.new(80, 80, false,20, true )
+  self.blinker:start()
+  self.content = string.format("%.3f", time / 1000)
+  self.isFinished = false
+
+  local img = gfx.image.new(gfx.getTextSize(self.content))
+
+  gfx.pushContext(img)
+    gfx.drawText(self.content,0,0)
+  gfx.popContext()
+
+  self:setScale(2)
+  self:setZIndex(-2)
+  self:setImage(img)
+  self:moveTo(200, 120)
+  self:add()
+end
+
+function FlashTime:update()
+  self:setVisible(self.blinker.on)
+  if not self.isFinished and not self.blinker.running then
+    self.isFinished = true
+    playdate.timer.performAfterDelay(500,self.remove, self) 
+  end
+
+  
 end

@@ -8,12 +8,11 @@ local TOLERANCE <const> = 20
 local img_close <const> = gfx.image.new("img/wheelgun.png")
 local img_far <const> = gfx.image.new("img/wheelgun_sm.png")
 
-local sfx = playdate.sound
--- local wheelgun_sound = playdate.sound.sampleplayer.new("img/wheelgun.wav")
-local synth = playdate.sound.synth.new(playdate.sound.kWaveSquare)
-local envelope = sfx.envelope.new(0,.2,0,.2)
-envelope:setScale(-1)
-synth:setADSR(0,.2,0,.2)
+local sfx <const> = playdate.sound
+local synth = sfx.synth.new(playdate.sound.kWaveSawtooth)
+local envelope = sfx.envelope.new(.05, .1,.2, .1)
+envelope:setScale(-2)
+synth:setADSR(.1, .2,.4,.2)
 synth:setFrequencyMod(envelope)
 
 
@@ -24,7 +23,7 @@ function Wheelgun:init(wheel)
     self:attach(wheel)
     local width, height = self:getSize()
     self.state = "ready"
-    self:setZIndex(200)
+    self:setZIndex(500)
     self:setImage(img_close)
     local w,h = self:getImage():getSize()
     self.rotation = 0
@@ -44,7 +43,6 @@ function Wheelgun:update()
         if playdate.buttonJustPressed(playdate.kButtonUp) then
           
           nut = self:try(self.wheel, self.rotation)
-          -- wheelgun_sound:play()
         end
     elseif self.state == "success" then
         self:moveTo(nut.x, nut.y)
@@ -67,7 +65,7 @@ end
 
 
 function Wheelgun:try(wheel)
--- synth:playNote("A", 1, 1)
+  synth:playNote(600, 1, .3)
   local nuts = wheel.nuts
   local rotation = self.rotation
   if self.mode == "loosen" then

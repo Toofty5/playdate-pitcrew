@@ -10,6 +10,7 @@ local f1_img = gfx.image.new("img/car_f1.png")
 class("Car").extends(gfx.sprite)
 
 function Car:init(num_nuts, car_type)
+  Car.super.init(self)
   self:setImage(f1_img)
   self:setCenter(.22, .64)
   self:add()
@@ -63,11 +64,13 @@ end
 
 function Car:roll_out()
   self.state = "rollout"
+    FlashTime(playdate.getCurrentTimeMilliseconds() - self.start_time)
     local durations = {100, 1200}
     local ls1 = playdate.geometry.lineSegment.new(200,100, 200,140)
     local ls2 = playdate.geometry.lineSegment.new(200,140, -2000, 140)
     local easings = {playdate.easingFunctions.linear, playdate.easingFunctions.inQuint}
     self.a = gfx.animator.new(durations, {ls1, ls2}, easings)
+    playdate.timer.performAfterDelay(1000, function() Puff() end)
     playdate.timer.performAfterDelay(durations[1]+durations[2], function(x) game.state = "waiting" end)
 end
 

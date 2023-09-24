@@ -1,3 +1,5 @@
+import "CoreLibs/animator"
+
 local gfx <const> = playdate.graphics
 
 
@@ -17,6 +19,26 @@ function Asphalt:init()
   self:setCenter(0,0)
   self:moveTo(-100,100)
   self:setImage(asphalt_blurred)
+end
+
+class("Puff").extends(gfx.sprite)
+function Puff:init()
+  Puff.super.init(self)
+  self:setZIndex(200)
+  local img = gfx.image.new("img/puff.png")
+  local img_blurred = img:blurredImage(4, 1, gfx.image.kDitherTypeBayer2x2)
+  self:setImage(img_blurred)
+  self:moveTo(400,200)
+  self:setCenter(0,1)
+  local easing = playdate.easingFunctions.outQuint
+  self.animator = gfx.animator.new(600, 400, 220, easing)
+  self:add()
+end
+
+function Puff:update()
+  self:moveTo(self.animator:currentValue(), self.y)
+  if self.animator:ended() then self:remove() end
+  print(self.animator:ended())
 end
 
 class("Wall").extends(gfx.sprite)

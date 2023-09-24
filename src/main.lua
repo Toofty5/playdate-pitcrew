@@ -20,15 +20,16 @@ game.reticle = Reticle(game.wheelgun)
 game.state = "init"
 
 local asphalt = Asphalt()
+-- local puff = Puff()
 -- local wall = Wall()
 
 
 function playdate.update()
-  
-  if game.state == "waiting" then
     if playdate.buttonJustPressed(playdate.kButtonB) then
       game.car:roll_out()
     end
+  
+  if game.state == "waiting" then
 
     if game.car.state =="rollout" and game.car.a:ended() then
       game.car:remove()
@@ -41,6 +42,7 @@ function playdate.update()
 
   playdate.timer.updateTimers()
   gfx.sprite.update()
+  gfx.animation.blinker.updateAll()
 end
 
 
