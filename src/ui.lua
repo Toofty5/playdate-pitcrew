@@ -39,13 +39,11 @@ end
 
 function PitTimer:update()
   gfx.pushContext(self:getImage())
-  gfx.clear(gfx.kColorClear)
+    gfx.clear(gfx.kColorClear)
     local elapsed = playdate.getCurrentTimeMilliseconds() - self.start_time 
-
     -- local seconds = string.format("%5d", elapsed//1000)
     -- local millis = string.format("%03d", elapsed % 1000)
     -- gfx.drawText(seconds.."."..millis, 1,1)
-
     gfx.drawText(elapsed/1000, 1,1)
   gfx.popContext()
 end
