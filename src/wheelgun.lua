@@ -20,6 +20,7 @@ class("Wheelgun").extends(gfx.sprite)
 
 
 function Wheelgun:init(wheel)
+    self.reticle = Reticle(self)
     self:attach(wheel)
     local width, height = self:getSize()
     self.state = "ready"
@@ -101,10 +102,11 @@ end
 
 function Wheelgun:attach(wheel)
   self.wheel = wheel
+  self.reticle:setVisible(true)
 end
 
 function Wheelgun:detach()
-  self.wheel = nil
+  self.reticle:setVisible(false)
 end
 
 function Wheelgun:reset()
