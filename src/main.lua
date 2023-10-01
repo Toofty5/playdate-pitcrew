@@ -19,8 +19,10 @@ game.wheelgun = Wheelgun(game.wheel)
 game.state = "init"
 
 local asphalt = Asphalt()
--- local puff = Puff()
--- local wall = Wall()
+for i = 1,50 do 
+  playdate.timer.performAfterDelay(i*5, function() Spark(100, 10) end)
+end
+
 
 
 function playdate.update()

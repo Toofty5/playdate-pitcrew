@@ -64,3 +64,40 @@ function Wall:init()
   self:moveTo(0,100)
   self:setImage(wall_blurred)
 end
+
+class("Spark").extends(gfx.sprite)
+local spark1_img = gfx.image.new(1,1)
+  gfx.pushContext(spark1_img)
+  gfx.drawPixel(0,0)
+  gfx.popContext()
+local spark2_img = gfx.image.new(10,10)
+  gfx.pushContext(spark2_img)
+  gfx.drawLine(5,0,5,10)
+  gfx.drawLine(0,5,10,5)
+  gfx.popContext()
+local spark3_img = gfx.image.new(7,7)
+  gfx.pushContext(spark3_img)
+  gfx.drawLine(0,0,7,7)
+  gfx.drawLine(0,7,7,0)
+  gfx.popContext()
+local spark_img = {spark1_img, spark2_img, spark3_img}
+
+function Spark:init(x,y)
+  Spark.super.init(self)
+  self:setImage(spark_img[math.random(1,3)])
+  self:moveTo(x,y)
+  self.velocity = math.random(30,50)
+  self.direction = math.random(0,360)
+  self.start_time = playdate.getCurrentTimeMilliseconds()
+  self:add()
+end
+
+function Spark:update()
+  local new_x = self.x + self.velocity * math.cos(self.direction)
+  local new_y = self.y + self.velocity * math.sin(self.direction)
+  self:moveTo(new_x, new_y)
+  local age = playdate.getCurrentTimeMilliseconds() - self.start_time
+  if age >= 100 then self:remove() end
+end
+
+
