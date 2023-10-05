@@ -2,6 +2,26 @@ import "CoreLibs/animator"
 
 local gfx <const> = playdate.graphics
 
+--puff that goes up and left
+class("LPuff").extends(gfx.sprite)
+function LPuff:init(x,y)
+  LPuff.super.init(self)
+  self:setZIndex(200)
+  local img = gfx.image.new("img/puff_sm.png")
+  self:setImage(img)
+  self:moveTo(x,y)
+  self:setCenter(1,1)
+  local easing = playdate.easingFunctions.outQuint
+  local dist = 30
+  local ls = playdate.geometry.lineSegment.new(x,y,x - dist, y - dist)
+  self.animator = gfx.animator.new(500, ls, easing)
+  self:add()
+end
+
+function LPuff:update()
+  self:moveTo(self.animator:currentValue())
+  if self.animator:ended() then self:remove() end
+end
 
 class("Asphalt").extends(gfx.sprite)
 function Asphalt:init()
@@ -21,11 +41,11 @@ function Asphalt:init()
   self:setImage(asphalt_blurred)
 end
 
-class("Puff").extends(gfx.sprite)
-function Puff:init()
-  Puff.super.init(self)
+class("Wake").extends(gfx.sprite)
+function Wake:init()
+  Wake.super.init(self)
   self:setZIndex(200)
-  local img = gfx.image.new("img/puff.png")
+  local img = gfx.image.new("img/wake.png")
   local img_blurred = img:blurredImage(4, 1, gfx.image.kDitherTypeBayer2x2)
   self:setImage(img_blurred)
   self:moveTo(400,200)
@@ -35,7 +55,7 @@ function Puff:init()
   self:add()
 end
 
-function Puff:update()
+function Wake:update()
   self:moveTo(self.animator:currentValue(), self.y)
   if self.animator:ended() then self:remove() end
   print(self.animator:ended())
