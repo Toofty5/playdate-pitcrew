@@ -1,3 +1,5 @@
+import "decorations.lua"
+
 local gfx <const> = playdate.graphics
 local SWAY <const> = 10
 local SUCCESS_TIME <const> = 100
@@ -69,6 +71,7 @@ function Wheelgun:try(wheel)
   synth:playNote(600, 1, .3)
   local nuts = wheel.nuts
   local rotation = self.rotation
+
   if self.mode == "loosen" then
     self:setImage(img_far)
     for i = 1, #nuts do

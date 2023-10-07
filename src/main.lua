@@ -23,10 +23,6 @@ for i = 1,50 do
   playdate.timer.performAfterDelay(i*5, function() Spark(100, 10) end)
 end
 
-local puff = LPuff(150,150)
-
-
-
 function playdate.update()
     if playdate.buttonJustPressed(playdate.kButtonB) then
       game.car:roll_out()
