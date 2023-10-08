@@ -26,7 +26,7 @@ function Wheelgun:init(wheel)
     self:attach(wheel)
     local width, height = self:getSize()
     self.state = "ready"
-    self:setZIndex(500)
+    self:setZIndex(200)
     self:setImage(img_close)
     local w,h = self:getImage():getSize()
     self.rotation = 0
@@ -103,6 +103,10 @@ function Wheelgun:try(wheel)
   end
 end
 
+function Wheelgun:exhaust()
+  puff(self.x, self.y+50)
+end
+
 function Wheelgun:attach(wheel)
   self.wheel = wheel
   self.reticle:setVisible(true)
@@ -114,5 +118,6 @@ end
 
 function Wheelgun:reset()
     self.state = "ready"
+    playdate.timer.performAfterDelay(10, self.exhaust, self)
 end
 

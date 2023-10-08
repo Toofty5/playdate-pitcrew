@@ -28,7 +28,7 @@ function RPuff:init(x,y)
   local easing = playdate.easingFunctions.outQuint
   local dist = 50
   local ls = playdate.geometry.lineSegment.new(x,y,x + dist, y - dist)
-  self.animator = gfx.animator.new(500, ls, easing)
+  self.animator = gfx.animator.new(300, ls, easing)
 end
 
 function Puff:update()
@@ -37,8 +37,8 @@ function Puff:update()
 end
 
 function puff(x,y)
-  Puff(x,y)
-  RPuff(x,y)
+  Puff(x-10,y)
+  RPuff(x+10,y)
 end
 
 
@@ -60,10 +60,12 @@ function Asphalt:init()
   self:setImage(asphalt_blurred)
 end
 
+
+
 class("Wake").extends(gfx.sprite)
 function Wake:init()
   Wake.super.init(self)
-  self:setZIndex(200)
+  self:setZIndex(150)
   local img = gfx.image.new("img/wake.png")
   local img_blurred = img:blurredImage(4, 1, gfx.image.kDitherTypeBayer2x2)
   self:setImage(img_blurred)
@@ -80,6 +82,8 @@ function Wake:update()
   print(self.animator:ended())
 end
 
+
+--ended up not using the wall in the background
 class("Wall").extends(gfx.sprite)
 function Wall:init()
   local wall_img = gfx.image.new(400, 50)
@@ -104,6 +108,8 @@ function Wall:init()
   self:setImage(wall_blurred)
 end
 
+
+-- eh, particles
 class("Spark").extends(gfx.sprite)
 local spark1_img = gfx.image.new(1,1)
   gfx.pushContext(spark1_img)
