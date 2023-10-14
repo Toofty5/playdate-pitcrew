@@ -2,6 +2,69 @@ import "CoreLibs/animator"
 
 local gfx <const> = playdate.graphics
 
+
+-- draw star centered at x,y; r1 is outer radius, r2 is inner
+function draw_star(x,y,num_points,r1,r2,rotation)
+  -- get the angle of each whole segment
+  local angle = 2 * math.pi / num_points
+  points = {}
+  for i = 0,num_points do
+    --outer point
+    local x1 = x + (r1 * math.cos(angle * i + rotation))
+    local y1 = y + (r1 * math.sin(angle * i + rotation))
+    table.insert(points,x1)
+    table.insert(points,y1)
+
+    --inner point
+    local x2 = x + (r2 * math.cos((angle * (i + .5) ) + rotation))
+    local y2 = y + (r2 * math.sin((angle * (i + .5) ) + rotation))
+    table.insert(points,x2)
+    table.insert(points,y2)
+  end
+
+  gfx.drawPolygon(table.unpack(points))
+
+end
+
+--star that goes up and left
+class("Star").extends(gfx.sprite)
+function Star:init(x,y)
+  Star.super.init(self)
+  self:setZIndex(200)
+  local img = gfx.image.new("img/puff_sm.png")
+  self:setImage(img)
+  self:moveTo(x,y)
+  self:setCenter(1,1)
+  local easing = playdate.easingFunctions.outQuint
+  local dist = 50
+  local ls = playdate.geometry.lineSegment.new(x,y,x - dist, y - dist)
+  self.animator = gfx.animator.new(500, ls, easing)
+  self:add()
+end
+
+
+--star that goes to the right
+class("RStar").extends(Star)
+function RStar:init(x,y)
+  RStar.super.init(self,x,y)
+  self:setCenter(0,1)
+  self:setImageFlip(gfx.kImageFlippedX)
+  local easing = playdate.easingFunctions.outQuint
+  local dist = 50
+  local ls = playdate.geometry.lineSegment.new(x,y,x + dist, y - dist)
+  self.animator = gfx.animator.new(300, ls, easing)
+end
+
+function Star:update()
+  self:moveTo(self.animator:currentValue())
+  if self.animator:ended() then self:remove() end
+end
+
+
+function puff(x,y)
+  Puff(x-10,y)
+  RPuff(x+10,y)
+end
 --puff that goes up and left
 class("Puff").extends(gfx.sprite)
 function Puff:init(x,y)
