@@ -19,10 +19,12 @@ game.wheelgun = Wheelgun(game.wheel)
 game.state = "init"
 
 
+
 local asphalt = Asphalt()
 for i = 1,50 do 
   playdate.timer.performAfterDelay(i*5, function() Spark(100, 10) end)
 end
+
 
 function playdate.update()
     if playdate.buttonJustPressed(playdate.kButtonB) then
@@ -40,11 +42,10 @@ function playdate.update()
     end
   end
 
+
   playdate.timer.updateTimers()
   gfx.sprite.update()
   gfx.animation.blinker.updateAll()
-
-
 
 
 end

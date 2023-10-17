@@ -3,36 +3,48 @@ import "CoreLibs/animator"
 local gfx <const> = playdate.graphics
 
 
--- draw star centered at x,y; r1 is outer radius, r2 is inner
-function draw_star(x,y,num_points,r1,r2,rotation)
+--returns a star image
+function star_image(num_points, r1, r2, rotation)
+  local img = gfx.image.new(r1 * 2, r1 * 2)
+  local x,y = r1, r1
+  local rotation = rotation - math.pi/2
+  local points = {}
+
   -- get the angle of each whole segment
   local angle = 2 * math.pi / num_points
-  points = {}
-  for i = 0,num_points do
-    --outer point
-    local x1 = x + (r1 * math.cos(angle * i + rotation))
-    local y1 = y + (r1 * math.sin(angle * i + rotation))
-    table.insert(points,x1)
-    table.insert(points,y1)
 
-    --inner point
-    local x2 = x + (r2 * math.cos((angle * (i + .5) ) + rotation))
-    local y2 = y + (r2 * math.sin((angle * (i + .5) ) + rotation))
-    table.insert(points,x2)
-    table.insert(points,y2)
-  end
+  gfx.pushContext(img)
 
-  gfx.drawPolygon(table.unpack(points))
+    for i = 0,num_points do
+      --outer point
+      local x1 = x + (r1 * math.cos(angle * i + rotation))
+      local y1 = y + (r1 * math.sin(angle * i + rotation))
+      table.insert(points,x1)
+      table.insert(points,y1)
 
+      --inner point
+      local x2 = x + (r2 * math.cos((angle * (i + .5) ) + rotation))
+      local y2 = y + (r2 * math.sin((angle * (i + .5) ) + rotation))
+      table.insert(points,x2)
+      table.insert(points,y2)
+    end
+
+    gfx.setColor(gfx.kColorWhite)
+    gfx.fillPolygon(table.unpack(points))
+    gfx.setColor(gfx.kColorBlack)
+    gfx.drawPolygon(table.unpack(points))
+    
+  gfx.popContext()
+  return img
 end
 
 --star that goes up and left
 class("Star").extends(gfx.sprite)
+star_img = star_image(5, 30, 10, 45)
 function Star:init(x,y)
   Star.super.init(self)
   self:setZIndex(200)
-  local img = gfx.image.new("img/puff_sm.png")
-  self:setImage(img)
+  self:setImage(star_img)
   self:moveTo(x,y)
   self:setCenter(1,1)
   local easing = playdate.easingFunctions.outQuint
@@ -41,7 +53,6 @@ function Star:init(x,y)
   self.animator = gfx.animator.new(500, ls, easing)
   self:add()
 end
-
 
 --star that goes to the right
 class("RStar").extends(Star)
