@@ -18,7 +18,8 @@ function Car:init(num_nuts, car_type)
   -- self:roll_in()
   self.num_nuts = num_nuts
   self.car_type = car_type
-  self.wheel = OldWheel(self)
+  self.wheel_rotation = math.random(360)
+  self.wheel = OldWheel(self, self.wheel_rotation)
   self.rear_wheel = RearWheel(self)
   self.timer_started = false
   self.state = "notify"
@@ -49,7 +50,7 @@ function Car:update()
 
     if self.wheel.state == "gone" then
         self.wheel:remove()
-        self.wheel = NewWheel(game.car)
+        self.wheel = NewWheel(game.car, self.wheel_rotation)
         game.wheelgun:attach(self.wheel)
         game.wheelgun.mode = "tighten"
     end

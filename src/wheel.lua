@@ -14,14 +14,14 @@ gfx.popContext()
 
 class('Wheel').extends(gfx.sprite)
 
-function Wheel:init(car, state)
+function Wheel:init(car, rotation, state)
   self.car = car
   self.num_nuts = car.num_nuts
   self.state = state
   self:setImage(wheel_img)
   self.nut_offset = 25
   self.nuts = {}
-  self.init_rotation = math.random(360)
+  self.init_rotation = rotation
   self.rotation = self.init_rotation
   self:setZIndex(0)
 end
@@ -32,8 +32,8 @@ function Wheel:update()
 end
 
 class('OldWheel').extends(Wheel)
-function OldWheel:init(car)
-  Wheel.init(self, car, 'mounted')
+function OldWheel:init(car, rotation)
+  Wheel.init(self, car, rotation, 'mounted')
   self.is_attached = true
   for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
   self:add()
@@ -55,8 +55,8 @@ function OldWheel:update()
 end
 
 class('NewWheel').extends(Wheel)
-function NewWheel:init(car)
-  Wheel.init(self,car,'fresh')
+function NewWheel:init(car, rotation)
+  Wheel.init(self,car, rotation,'fresh')
   for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, false)) end
   self:slide_in()
 end
@@ -72,7 +72,7 @@ end
 
 class('RearWheel').extends(Wheel)
 function RearWheel:init(car)
-  Wheel.init(self,car,'rear')
+  Wheel.init(self,car, math.random(360),'rear')
   for i = 1, self.num_nuts do table.insert(self.nuts, Nut(self, i, true)) end
   self:add()
 end

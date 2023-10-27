@@ -2,12 +2,17 @@ import "CoreLibs/animator"
 
 local gfx <const> = playdate.graphics
 
+-- two stars, yay!
+function starburst(x,y)
+  Star(x,y, 135)
+  Star(x,y, 45)
+end
 
---returns a star image
+--returns a star image because arbitrary stars are fun
 function star_image(num_points, r1, r2, rotation)
   local img = gfx.image.new(r1 * 2, r1 * 2)
   local x,y = r1, r1
-  local rotation = rotation - math.pi/2
+  local rotation = (rotation * math.pi/180) - math.pi/2
   local points = {}
 
   -- get the angle of each whole segment
@@ -38,32 +43,22 @@ function star_image(num_points, r1, r2, rotation)
   return img
 end
 
---star that goes up and left
+
 class("Star").extends(gfx.sprite)
-star_img = star_image(5, 30, 10, 45)
-function Star:init(x,y)
+function Star:init(x,y, rotation)
+  star_img = star_image(5, 20, 8, rotation)
   Star.super.init(self)
   self:setZIndex(200)
   self:setImage(star_img)
   self:moveTo(x,y)
   self:setCenter(1,1)
   local easing = playdate.easingFunctions.outQuint
-  local dist = 50
-  local ls = playdate.geometry.lineSegment.new(x,y,x - dist, y - dist)
-  self.animator = gfx.animator.new(500, ls, easing)
-  self:add()
-end
-
---star that goes to the right
-class("RStar").extends(Star)
-function RStar:init(x,y)
-  RStar.super.init(self,x,y)
-  self:setCenter(0,1)
-  self:setImageFlip(gfx.kImageFlippedX)
-  local easing = playdate.easingFunctions.outQuint
-  local dist = 50
-  local ls = playdate.geometry.lineSegment.new(x,y,x + dist, y - dist)
+  local dist = 100 -- distance for the star to travel
+  local x2 = x + dist * math.cos(rotation * math.pi/180)
+  local y2 = y - dist * math.sin(rotation * math.pi/180)
+  local ls = playdate.geometry.lineSegment.new(x,y,x2,y2)
   self.animator = gfx.animator.new(300, ls, easing)
+  self:add()
 end
 
 function Star:update()
@@ -216,7 +211,7 @@ function Spark:update()
   local new_y = self.y + self.velocity * math.sin(self.direction)
   self:moveTo(new_x, new_y)
   local age = playdate.getCurrentTimeMilliseconds() - self.start_time
-  if age >= 100 then self:remove() end
+  if age >= 80 then self:remove() end
 end
 
 

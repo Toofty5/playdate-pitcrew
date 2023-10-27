@@ -56,6 +56,7 @@ function Wheelgun:update()
         end
 
         self.state = "pause"
+        playdate.timer.performAfterDelay(SUCCESS_TIME, starburst, self.x, self.y+10)
         playdate.timer.performAfterDelay(SUCCESS_TIME, self.reset, self)
 
     elseif self.state == "fail" then
@@ -118,6 +119,6 @@ end
 
 function Wheelgun:reset()
     self.state = "ready"
-    playdate.timer.performAfterDelay(10, self.exhaust, self)
+    --playdate.timer.performAfterDelay(10, self.exhaust, self)
 end
 
