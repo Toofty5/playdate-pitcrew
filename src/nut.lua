@@ -62,5 +62,4 @@ function LooseNut:update()
         self.dy += self.gravity
         self:moveTo(self.x+self.dx, self.y+self.dy)
     end
-    -- print("loose nut", self.x, self.y, self.dx, self.dy)
 end

@@ -16,6 +16,7 @@ game.car = Car(math.random(2,6), "f1")
 game.wheel = game.car.wheel
 game.wheelgun = Wheelgun(game.wheel)
 game.state = "init"
+game.stats = {}
 
 local asphalt = Asphalt()
 for i = 1,50 do 
@@ -31,6 +32,8 @@ function playdate.update()
   if game.state == "waiting" then
 
     if game.car.state =="rollout" and game.car.a:ended() then
+      table.insert(game.stats, { game.car.time, game.car.num_nuts})
+
       game.car:remove()
       game.car = Car(math.random(2,8),f1)
       game.wheel = game.car.wheel
@@ -43,7 +46,6 @@ function playdate.update()
   playdate.timer.updateTimers()
   gfx.sprite.update()
   gfx.animation.blinker.updateAll()
-
 
 end
 

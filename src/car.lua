@@ -66,7 +66,8 @@ end
 function Car:roll_out()
   self.state = "rollout"
   game.wheelgun:detach()
-    FlashTime(playdate.getCurrentTimeMilliseconds() - self.start_time)
+    self.time =  playdate.getCurrentTimeMilliseconds() - self.start_time
+    FlashTime(self.time)
     local durations = {150, 1200}
     local ls1 = playdate.geometry.lineSegment.new(200,100, 200,140)
     local ls2 = playdate.geometry.lineSegment.new(200,140, -2000, 140)
