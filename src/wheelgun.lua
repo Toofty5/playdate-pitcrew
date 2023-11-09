@@ -1,4 +1,5 @@
 import "decorations.lua"
+-- import "sounds.lua"
 
 local gfx <const> = playdate.graphics
 local SWAY <const> = 10
@@ -10,12 +11,6 @@ local TOLERANCE <const> = 20
 local img_close <const> = gfx.image.new("img/wheelgun.png")
 local img_far <const> = gfx.image.new("img/wheelgun_sm.png")
 
-local sfx <const> = playdate.sound
-local synth = sfx.synth.new(playdate.sound.kWaveSawtooth)
-local envelope = sfx.envelope.new(.05, .1,.2, .1)
-envelope:setScale(-2)
-synth:setADSR(.1, .2,.4,.2)
-synth:setFrequencyMod(envelope)
 
 
 class("Wheelgun").extends(gfx.sprite)
@@ -69,7 +64,6 @@ end
 
 
 function Wheelgun:try(wheel)
-  synth:playNote(600, 1, .3)
   local nuts = wheel.nuts
   local rotation = self.rotation
 
