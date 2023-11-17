@@ -1,6 +1,24 @@
 import "CoreLibs/animation"
 local gfx <const> = playdate.graphics
 
+class("Notify").extends(gfx.sprite)
+function Notify:init(text, x,y)
+  Notify.super.init(self)
+  local img = gfx.imageWithText(text, 100,100)
+  self.blinker = gfx.animation.blinker.new(100,100,false, 10, false)
+  self.blinker:start()
+  self:setCenter(0,0)
+
+  self:setImage(img)
+  self:add()
+  self:moveTo(x,y)
+end
+
+function Notify:update()
+  self:setVisible(self.blinker.on)
+end
+  
+
 class("Reticle").extends(gfx.sprite)
 
 function Reticle:init(wheelgun)

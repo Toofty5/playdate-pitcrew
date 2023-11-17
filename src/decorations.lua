@@ -148,7 +148,7 @@ end
 function Wake:update()
   self:moveTo(self.animator:currentValue(), self.y)
   if self.animator:ended() then self:remove() end
-  print(self.animator:ended())
+  --print(self.animator:ended())
 end
 
 

@@ -23,7 +23,6 @@ for i = 1,50 do
   playdate.timer.performAfterDelay(i*5, function() Spark(100, 10) end)
 end
 
-
 function playdate.update()
     if playdate.buttonJustPressed(playdate.kButtonB) then
       game.car:roll_out()
@@ -31,6 +30,7 @@ function playdate.update()
   
   if game.state == "waiting" then
 
+    -- car is done.  Send it out.
     if game.car.state =="rollout" and game.car.a:ended() then
       table.insert(game.stats, { game.car.time, game.car.num_nuts})
 
@@ -39,6 +39,9 @@ function playdate.update()
       game.wheel = game.car.wheel
       game.wheelgun:attach(game.wheel)
       game.wheelgun.mode = "loosen"
+      for i,entry in pairs(game.stats) do
+        print(entry[0], entry[1])
+      end
     end
   end
 

@@ -23,14 +23,14 @@ function Car:init(num_nuts, car_type)
   self.rear_wheel = RearWheel(self)
   self.timer_started = false
   self.state = "notify"
-  self.incoming_note = RaceText("Car incoming!", 4, 4)
+  self.incoming_note = Notify("Car incoming!", 4, 4)
   self:moveTo(0,-500)
 end
 
 function Car:update()
 
   if self.state == "notify" then
-    if self.incoming_note:ended() then
+    if not self.incoming_note.blinker.running then
       self.incoming_note:remove()
       self:roll_in()
     end
