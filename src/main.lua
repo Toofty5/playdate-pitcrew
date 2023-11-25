@@ -12,7 +12,8 @@ import "decorations.lua"
 
 local gfx <const> = playdate.graphics
 
-game.car = Car(math.random(2,6), "f1")
+--game.car = Car(math.random(2,6), "f1")
+game.car = Car(1, "f1")
 game.wheel = game.car.wheel
 game.wheelgun = Wheelgun(game.wheel)
 game.state = "init"

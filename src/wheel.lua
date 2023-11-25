@@ -19,7 +19,12 @@ function Wheel:init(car, rotation, state)
   self.num_nuts = car.num_nuts
   self.state = state
   self:setImage(wheel_img)
-  self.nut_offset = 25
+  if self.num_nuts == 1 then
+    self.nut_offset = 0
+  else
+    self.nut_offset = 25
+  end
+  
   self.nuts = {}
   self.init_rotation = rotation
   self.rotation = self.init_rotation
@@ -65,6 +70,10 @@ function NewWheel:update()
   Wheel.update(self)
   if self.state == "fresh" then
     self:moveTo(self.a:currentValue())
+    if self.a:ended() then
+      self.state = "waiting"
+    end
+
   elseif self.state == "ready" then
     self:moveTo(self.car:get_axle())
   end

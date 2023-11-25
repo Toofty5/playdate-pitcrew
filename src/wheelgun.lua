@@ -12,7 +12,6 @@ local img_close <const> = gfx.image.new("img/wheelgun.png")
 local img_far <const> = gfx.image.new("img/wheelgun_sm.png")
 
 
-
 class("Wheelgun").extends(gfx.sprite)
 
 
@@ -31,43 +30,55 @@ function Wheelgun:init(wheel)
 end
 
 function Wheelgun:update()
+  if self.wheel.num_nuts == 1 then
+    self.rotation = 90
+
+  else
     self.rotation = (playdate.getCrankPosition() + 270) % 360
-    if  self.state == "ready" then
-        self:setImage(img_close)
-        local dx = SWAY * math.cos(math.rad(self.rotation))
-        local dy = SWAY * .75 * math.sin(math.rad(self.rotation))
-        self:moveTo(POS_X+dx , POS_Y+dy)
+  end
 
-        if playdate.buttonJustPressed(playdate.kButtonUp) then
-          
-          nut = self:try(self.wheel, self.rotation)
-        end
-    elseif self.state == "success" then
-        self:moveTo(nut.x, nut.y)
-        if self.mode == "loosen" then
-          self.wheel:remove_nut(nut.pos)
-        elseif self.mode == "tighten" then
-          self.wheel:add_nut(nut.pos)
-        end
+  if  self.state == "ready" then
+      self:setImage(img_close)
+      local dx = SWAY * math.cos(math.rad(self.rotation))
+      local dy = SWAY * .75 * math.sin(math.rad(self.rotation))
+      self:moveTo(POS_X+dx , POS_Y+dy)
 
-        self.state = "pause"
-        playdate.timer.performAfterDelay(SUCCESS_TIME, starburst, self.x, self.y+10)
-        playdate.timer.performAfterDelay(SUCCESS_TIME, self.reset, self)
+      if playdate.buttonJustPressed(playdate.kButtonUp) then
+        
+        nut = self:try(self.wheel, self.rotation)
+      end
+  elseif self.state == "success" then
+      self:moveTo(nut.x, nut.y)
+      if self.mode == "loosen" then
+        self.wheel:remove_nut(nut.pos)
+      elseif self.mode == "tighten" then
+        self.wheel:add_nut(nut.pos)
+      end
 
-    elseif self.state == "fail" then
-        local x = self.wheel.x + 25 * math.cos(math.rad(self.rotation)) + math.random(-5,5)
-        local y = self.wheel.y + 25 * math.sin(math.rad(self.rotation)) + math.random(-5,5)
-        self:moveTo(x, y)
-    end
+      self.state = "pause"
+      playdate.timer.performAfterDelay(SUCCESS_TIME, starburst, self.x, self.y+10)
+      playdate.timer.performAfterDelay(SUCCESS_TIME, self.reset, self)
+
+  elseif self.state == "fail" then
+      local x = self.wheel.x + 25 * math.cos(math.rad(self.rotation)) + math.random(-5,5)
+      local y = self.wheel.y + 25 * math.sin(math.rad(self.rotation)) + math.random(-5,5)
+      self:moveTo(x, y)
+  end
 
 end
 
 
 function Wheelgun:try(wheel)
   local nuts = wheel.nuts
-  local rotation = self.rotation
+  local rotation
 
-  if self.mode == "loosen" then
+  if self.wheel.num_nuts == 1 then
+    rotation = nuts[1]:getRotation()
+  else 
+    rotation = self.rotation
+  end
+
+  if self.mode == "loosen" and self.wheel.car.state == "waiting" then
     self:setImage(img_far)
     for i = 1, #nuts do
         local nut = nuts[i]
@@ -78,10 +89,8 @@ function Wheelgun:try(wheel)
         end
     end
     self.state = "fail"
-    playdate.timer.performAfterDelay(FAIL_TIME, self.reset, self)
-    return false
 
-  elseif self.mode == "tighten" then
+  elseif self.mode == "tighten" and self.wheel.state == "waiting" then
     self:setImage(img_far)
     for i = 1, #nuts do
         local nut = nuts[i]
@@ -91,11 +100,12 @@ function Wheelgun:try(wheel)
             return nut
         end
     end
-    self.state = "fail"
-    playdate.timer.performAfterDelay(FAIL_TIME, self.reset, self)
-    return false
-
   end
+
+
+  self.state = "fail"
+  playdate.timer.performAfterDelay(FAIL_TIME, self.reset, self)
+  return false
 end
 
 function Wheelgun:exhaust()
