@@ -60,9 +60,14 @@ function Wheelgun:update()
       playdate.timer.performAfterDelay(SUCCESS_TIME, self.reset, self)
 
   elseif self.state == "fail" then
-      local x = self.wheel.x + 25 * math.cos(math.rad(self.rotation)) + math.random(-5,5)
-      local y = self.wheel.y + 25 * math.sin(math.rad(self.rotation)) + math.random(-5,5)
-      self:moveTo(x, y)
+    local x,y = 200, 140
+
+    -- is wheel in position?
+    if self.wheel.state == "waiting" or self.wheel.car.state == "waiting" then
+      x = self.wheel.x + 25 * math.cos(math.rad(self.rotation))
+      y = self.wheel.y + 25 * math.sin(math.rad(self.rotation))
+    end
+    self:moveTo(x+math.random(-5,5), y+math.random(-5,5))
   end
 
 end
